@@ -1,8 +1,8 @@
 
-using Discount.Application;
-using Discount.Infrastructure;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 
-namespace Discount.API
+namespace ApiGateway
 {
     public class Program
     {
@@ -11,8 +11,10 @@ namespace Discount.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddDiscountApplicationDependencyInjection();
-            builder.Services.AddDiscountInfrastructureDependencyInjection(builder.Configuration);
+
+            builder.Configuration.AddJsonFile("ocelot.json");
+
+            builder.Services.AddOcelot();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -28,6 +30,7 @@ namespace Discount.API
                 app.UseSwaggerUI();
             }
 
+            app.UseOcelot();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
